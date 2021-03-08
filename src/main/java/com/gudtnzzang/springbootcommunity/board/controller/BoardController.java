@@ -1,4 +1,4 @@
-package com.gudtnzzang.springbootcommunity.board;
+package com.gudtnzzang.springbootcommunity.board.controller;
 
 import com.gudtnzzang.springbootcommunity.board.dto.BoardDto;
 import com.gudtnzzang.springbootcommunity.board.service.BoardService;
