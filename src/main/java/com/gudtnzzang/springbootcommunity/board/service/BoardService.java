@@ -58,4 +58,23 @@ public class BoardService {
     public void deletePost(Long id) {
         boardRepository.deleteById(id);
     }
+
+    @Transactional
+    public List<BoardDto> getSearchResult(String keyword) {
+        List<Board> boardList = boardRepository.findByTitleContaining(keyword);
+        List<BoardDto> boardDtoList = new ArrayList<>();
+
+        for(Board board : boardList) {
+            boardDtoList.add(BoardDto.builder()
+                    .id(board.getId())
+                    .author(board.getAuthor())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .createdDate(board.getCreatedDate())
+                    .build()
+            );
+        }
+
+        return boardDtoList;
+    }
 }
