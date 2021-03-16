@@ -34,7 +34,6 @@ public class BoardController {
 
     @PostMapping("/post")
     public String write(BoardDto boardDto) {
-        System.out.println("called");
         boardService.savePost(boardDto);
         return "redirect:/";
     }
@@ -66,9 +65,13 @@ public class BoardController {
     }
 
     @GetMapping("/post/search")
-    public String search(@RequestParam(value="keyword") String keyword, Model model) {
-        List<BoardDto> boardDtoList = boardService.getSearchResult(keyword);
+    public String search(@RequestParam(value="keyword") String keyword, @RequestParam(value = "page", defaultValue = "1") Integer pageNum, Model model) {
+        List<BoardDto> boardDtoList = boardService.getSearchResult(keyword, pageNum);
+        Integer[] pageList = boardService.getSearchResultPageList(pageNum, boardService.getResultBoardCount(keyword));
+
+        model.addAttribute("keyword", keyword);
         model.addAttribute("postList", boardDtoList);
+        model.addAttribute("pageList", pageList);
         return "board/list.html";
     }
 }
