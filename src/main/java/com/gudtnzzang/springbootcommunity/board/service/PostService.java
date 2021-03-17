@@ -1,8 +1,8 @@
 package com.gudtnzzang.springbootcommunity.board.service;
 
-import com.gudtnzzang.springbootcommunity.board.domain.entity.Board;
-import com.gudtnzzang.springbootcommunity.board.domain.repository.BoardRepository;
-import com.gudtnzzang.springbootcommunity.board.dto.BoardDto;
+import com.gudtnzzang.springbootcommunity.board.domain.entity.Post;
+import com.gudtnzzang.springbootcommunity.board.domain.repository.PostRepository;
+import com.gudtnzzang.springbootcommunity.board.dto.PostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -13,63 +13,63 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class BoardService {
-    private BoardRepository boardRepository;
+public class PostService {
+    private PostRepository postRepository;
     private static final int BLOCK_PAGE_NUM_COUNT = 5;  // 블럭에 존재하는 페이지 번호 수
     private static final int PAGE_POST_COUNT = 4;       // 한 페이지에 존재하는 게시글 수
 
-    public BoardService(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
     }
 
-    private BoardDto convertEntityToDto(Board board) {
-        return BoardDto.builder()
-                .id(board.getId())
-                .author(board.getAuthor())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .createdDate(board.getCreatedDate())
-                .modifiedDate(board.getModifiedDate())
+    private PostDto convertEntityToDto(Post post) {
+        return PostDto.builder()
+                .id(post.getId())
+                .author(post.getAuthor())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .createdDate(post.getCreatedDate())
+                .modifiedDate(post.getModifiedDate())
                 .build();
     }
 
     @Transactional
-    public Long savePost(BoardDto boardDto) {
-        return boardRepository.save(boardDto.toEntity()).getId();
+    public Long savePost(PostDto postDto) {
+        return postRepository.save(postDto.toEntity()).getId();
     }
 
 
     @Transactional
-    public List<BoardDto> getBoardList(Integer pageNum) {
-        Page<Board> page = boardRepository.findAll(PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+    public List<PostDto> getBoardList(Integer pageNum) {
+        Page<Post> page = postRepository.findAll(PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
 
-        List<Board> boardList = page.getContent();
-        List<BoardDto> boardDtoList = new ArrayList<>();
+        List<Post> postList = page.getContent();
+        List<PostDto> postDtoList = new ArrayList<>();
 
-        for (Board board : boardList) {
-            boardDtoList.add(this.convertEntityToDto(board));
+        for (Post post : postList) {
+            postDtoList.add(this.convertEntityToDto(post));
         }
 
-        return boardDtoList;
+        return postDtoList;
     }
 
     @Transactional
-    public List<BoardDto> getSearchResult(String keyword, Integer pageNum) {
-        Page<Board> page = boardRepository.findByTitleContaining(keyword, PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
-        List<Board> boardList = page.getContent();
+    public List<PostDto> getSearchResult(String keyword, Integer pageNum) {
+        Page<Post> page = postRepository.findByTitleContaining(keyword, PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        List<Post> postList = page.getContent();
 
-        List<BoardDto> boardDtoList = new ArrayList<>();
+        List<PostDto> postDtoList = new ArrayList<>();
 
-        for(Board board : boardList) {
-            boardDtoList.add(this.convertEntityToDto(board));
+        for(Post post : postList) {
+            postDtoList.add(this.convertEntityToDto(post));
         }
 
-        return boardDtoList;
+        return postDtoList;
     }
 
     @Transactional
     public Long getBoardCount() {
-        return boardRepository.count();
+        return postRepository.count();
     }
 
     @Transactional
@@ -100,7 +100,7 @@ public class BoardService {
 
     @Transactional
     public Double getResultBoardCount(String keyword) {
-        return Double.valueOf(boardRepository.findByTitleContaining(keyword).size());
+        return Double.valueOf(postRepository.findByTitleContaining(keyword).size());
     }
 
     @Transactional
@@ -127,21 +127,21 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardDto getPost(Long id) {
-        Board board = boardRepository.findById(id).get();
+    public PostDto getPost(Long id) {
+        Post post = postRepository.findById(id).get();
 
-        BoardDto boardDto = BoardDto.builder()
-                .id(board.getId())
-                .author(board.getAuthor())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .createdDate(board.getCreatedDate())
+        PostDto postDto = PostDto.builder()
+                .id(post.getId())
+                .author(post.getAuthor())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .createdDate(post.getCreatedDate())
                 .build();
-        return boardDto;
+        return postDto;
     }
 
     @Transactional
     public void deletePost(Long id) {
-        boardRepository.deleteById(id);
+        postRepository.deleteById(id);
     }
 }

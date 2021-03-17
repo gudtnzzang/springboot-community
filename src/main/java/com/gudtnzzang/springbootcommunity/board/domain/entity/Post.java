@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Board {
+public class Post {
     @Id
     @GeneratedValue
     private Long id;
@@ -37,7 +37,7 @@ public class Board {
     private LocalDateTime modifiedDate;
 
     @Builder
-    public Board(Long id, String author, String title, String content) {
+    public Post(Long id, String author, String title, String content) {
         this.id = id;
         this.author = author;
         this.title = title;
