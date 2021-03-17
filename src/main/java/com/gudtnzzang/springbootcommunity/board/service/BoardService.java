@@ -28,6 +28,8 @@ public class BoardService {
                 .author(board.getAuthor())
                 .title(board.getTitle())
                 .content(board.getContent())
+                .createdDate(board.getCreatedDate())
+                .modifiedDate(board.getModifiedDate())
                 .build();
     }
 
@@ -39,7 +41,7 @@ public class BoardService {
 
     @Transactional
     public List<BoardDto> getBoardList(Integer pageNum) {
-        Page<Board> page = boardRepository.findAll(PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.ASC, "createdDate")));
+        Page<Board> page = boardRepository.findAll(PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
 
         List<Board> boardList = page.getContent();
         List<BoardDto> boardDtoList = new ArrayList<>();
@@ -53,7 +55,7 @@ public class BoardService {
 
     @Transactional
     public List<BoardDto> getSearchResult(String keyword, Integer pageNum) {
-        Page<Board> page = boardRepository.findByTitleContaining(keyword, PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.ASC, "createdDate")));
+        Page<Board> page = boardRepository.findByTitleContaining(keyword, PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
         List<Board> boardList = page.getContent();
 
         List<BoardDto> boardDtoList = new ArrayList<>();
@@ -105,7 +107,6 @@ public class BoardService {
     public Integer[] getSearchResultPageList(Integer curPageNum, Double postsCount) {
         Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
 
-        System.out.println(postsCount);
         // 총 게시글 기준으로 계산한 마지막 페이지 번호 계산 (올림으로 계산)
         Integer totalLastPageNum = (int)(Math.ceil((postsCount/PAGE_POST_COUNT)));
 
