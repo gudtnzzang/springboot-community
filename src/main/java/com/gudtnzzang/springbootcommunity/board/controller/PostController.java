@@ -1,6 +1,8 @@
 package com.gudtnzzang.springbootcommunity.board.controller;
 
+import com.gudtnzzang.springbootcommunity.board.dto.CommentDto;
 import com.gudtnzzang.springbootcommunity.board.dto.PostDto;
+import com.gudtnzzang.springbootcommunity.board.service.CommentService;
 import com.gudtnzzang.springbootcommunity.board.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,9 +13,11 @@ import java.util.List;
 @Controller
 public class PostController {
     private PostService postService;
+    private CommentService commentService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, CommentService commentService) {
         this.postService = postService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/")
@@ -41,13 +45,17 @@ public class PostController {
     @GetMapping("/post/{id}")
     public String detail(@PathVariable("id") Long id, Model model) {
         PostDto postDto = postService.getPost(id);
+        List<CommentDto> commentDtoList = commentService.getCommentList(id);
+
         model.addAttribute("post", postDto);
+        model.addAttribute("commentList", commentDtoList);
         return "board/detail.html";
     }
 
     @GetMapping("/post/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model) {
         PostDto postDto = postService.getPost(id);
+
         model.addAttribute("post", postDto);
         return "board/edit.html";
     }
