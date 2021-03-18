@@ -32,18 +32,18 @@ public class PostController {
     }
 
     @GetMapping("/post")
-    public String post() {
+    public String displayPostWrite() {
         return "board/post.html";
     }
 
     @PostMapping("/post")
-    public String write(PostDto postDto) {
+    public String writePost(PostDto postDto) {
         postService.savePost(postDto);
         return "redirect:/";
     }
 
     @GetMapping("/post/{id}")
-    public String detail(@PathVariable("id") Long id, Model model) {
+    public String displayPostDetail(@PathVariable("id") Long id, Model model) {
         PostDto postDto = postService.getPost(id);
         List<CommentDto> commentDtoList = commentService.getCommentList(id);
 
@@ -53,7 +53,7 @@ public class PostController {
     }
 
     @GetMapping("/post/edit/{id}")
-    public String edit(@PathVariable("id") Long id, Model model) {
+    public String displayPostEdit(@PathVariable("id") Long id, Model model) {
         PostDto postDto = postService.getPost(id);
 
         model.addAttribute("post", postDto);
@@ -61,19 +61,19 @@ public class PostController {
     }
 
     @PutMapping("/post/edit/{id}")
-    public String update(PostDto postDto) {
+    public String editPost(PostDto postDto) {
         postService.savePost(postDto);
         return "redirect:/";
     }
 
     @DeleteMapping("/post/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    public String deletePost(@PathVariable("id") Long id) {
         postService.deletePost(id);
         return "redirect:/";
     }
 
     @GetMapping("/post/search")
-    public String search(@RequestParam(value="keyword") String keyword, @RequestParam(value = "page", defaultValue = "1") Integer pageNum, Model model) {
+    public String searchPost(@RequestParam(value="keyword") String keyword, @RequestParam(value = "page", defaultValue = "1") Integer pageNum, Model model) {
         List<PostDto> postDtoList = postService.getSearchResult(keyword, pageNum);
         Integer[] pageList = postService.getSearchResultPageList(pageNum, postService.getResultBoardCount(keyword));
 
