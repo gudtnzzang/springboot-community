@@ -18,10 +18,12 @@ import java.time.LocalDateTime;
 public class Post {
     @Id
     @GeneratedValue
+    @Column(name = "post_id")
     private Long id;
 
-    @Column(length = 10, nullable = false)
-    private String author;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(length = 100, nullable = false)
     private String title;
@@ -37,9 +39,9 @@ public class Post {
     private LocalDateTime modifiedDate;
 
     @Builder
-    public Post(Long id, String author, String title, String content) {
+    public Post(Long id, User user, String title, String content) {
         this.id = id;
-        this.author = author;
+        this.user = user;
         this.title = title;
         this.content = content;
     }

@@ -1,6 +1,5 @@
 package com.gudtnzzang.springbootcommunity.board.dto;
 
-import com.gudtnzzang.springbootcommunity.board.domain.entity.Post;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,16 +15,6 @@ public class PostDto {
     private String content;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-
-    public Post toEntity() {
-        Post build = Post.builder()
-                .id(id)
-                .author(author)
-                .title(title)
-                .content(content)
-                .build();
-        return build;
-    }
 
     @Builder
     public PostDto(Long id, String author, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
