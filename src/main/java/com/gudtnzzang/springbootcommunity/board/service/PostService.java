@@ -1,7 +1,9 @@
 package com.gudtnzzang.springbootcommunity.board.service;
 
 import com.gudtnzzang.springbootcommunity.board.domain.entity.Post;
+import com.gudtnzzang.springbootcommunity.board.domain.entity.User;
 import com.gudtnzzang.springbootcommunity.board.domain.repository.PostRepository;
+import com.gudtnzzang.springbootcommunity.board.domain.repository.UserRepository;
 import com.gudtnzzang.springbootcommunity.board.dto.PostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,17 +17,19 @@ import java.util.List;
 @Service
 public class PostService {
     private PostRepository postRepository;
+    private UserRepository userRepository;
     private static final int BLOCK_PAGE_NUM_COUNT = 5;  // 블럭에 존재하는 페이지 번호 수
     private static final int PAGE_POST_COUNT = 4;       // 한 페이지에 존재하는 게시글 수
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     private PostDto convertEntityToDto(Post post) {
         return PostDto.builder()
                 .id(post.getId())
-                .author(post.getAuthor())
+                .author(post.getUser().getEmail())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdDate(post.getCreatedDate())
@@ -35,7 +39,14 @@ public class PostService {
 
     @Transactional
     public Long savePost(PostDto postDto) {
-        return postRepository.save(postDto.toEntity()).getId();
+        Post newPost = Post.builder()
+                .id(postDto.getId())
+                .user(userRepository.findByEmail(postDto.getAuthor()).get())
+                .title(postDto.getTitle())
+                .content(postDto.getContent())
+                .build();
+
+        return postRepository.save(newPost).getId();
     }
 
 
@@ -132,7 +143,7 @@ public class PostService {
 
         PostDto postDto = PostDto.builder()
                 .id(post.getId())
-                .author(post.getAuthor())
+                .author(post.getUser().getEmail())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdDate(post.getCreatedDate())

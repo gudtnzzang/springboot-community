@@ -27,7 +27,7 @@ public class CommentService {
     private CommentDto convertEntityToDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
-                .userId(comment.getUser().getId())
+                .author(comment.getUser().getEmail())
                 .content(comment.getContent())
                 .createdDate(comment.getCreatedDate())
                 .modifiedDate(comment.getModifiedDate())
@@ -51,7 +51,7 @@ public class CommentService {
         Comment newComment = Comment.builder()
                 .id(commentDto.getId())
                 .post(postRepository.getOne(commentDto.getPostId()))
-                .user(userRepository.getOne(commentDto.getUserId()))
+                .user(userRepository.findByEmail(commentDto.getAuthor()).get())
                 .content(commentDto.getContent())
                 .build();
 

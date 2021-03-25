@@ -30,7 +30,16 @@
     <div class="card" th:each="comment : ${commentList}">
         <div class="card-body">
             <p class="card-text" >
-                <b><span th:text="${comment.username} + '     '"</span></b>
+                <b><span th:text="${comment.author} + '     '"</span></b>
+                <span th:text="${comment.content}"></span>
+            </p>
+            <p class="card-text"><small class="text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></small></p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text" >
+                <b><span th:text="${comment.author} + '     '"</span></b>
                 <span th:text="${comment.content}"></span>
             </p>
             <p class="card-text"><small class="text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></small></p>

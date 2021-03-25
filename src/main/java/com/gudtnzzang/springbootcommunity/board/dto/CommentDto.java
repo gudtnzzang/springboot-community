@@ -11,16 +11,16 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private Long id;
     private Long postId;
-    private Long userId;
+    private String author;
     private String content;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
     @Builder
-    public CommentDto(Long id, Long postId, Long userId, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public CommentDto(Long id, Long postId, String author, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.postId = postId;
-        this.userId = userId;
+        this.author = author;
         this.content = content;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
