@@ -1,9 +1,12 @@
 package com.gudtnzzang.springbootcommunity.board.controller;
 
+import com.gudtnzzang.springbootcommunity.board.domain.entity.User;
 import com.gudtnzzang.springbootcommunity.board.dto.CommentDto;
 import com.gudtnzzang.springbootcommunity.board.service.CommentService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class CommentController {
@@ -13,9 +16,12 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PutMapping("/comment")
-    public String writeComment(CommentDto commentDto) {
+    @PostMapping("/comment/{postId}")
+    public String writeComment(@PathVariable(name = "postId") Long postId, CommentDto commentDto, @AuthenticationPrincipal User currentUser) {
+
+        commentDto.setPostId(postId);
+        commentDto.setAuthor(currentUser.getEmail());
         commentService.saveComment(commentDto);
-        return "redirect:/";
+        return "redirect:/post/" + postId;
     }
 }

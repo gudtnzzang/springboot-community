@@ -1,9 +1,11 @@
 package com.gudtnzzang.springbootcommunity.board.controller;
 
+import com.gudtnzzang.springbootcommunity.board.domain.entity.User;
 import com.gudtnzzang.springbootcommunity.board.dto.CommentDto;
 import com.gudtnzzang.springbootcommunity.board.dto.PostDto;
 import com.gudtnzzang.springbootcommunity.board.service.CommentService;
 import com.gudtnzzang.springbootcommunity.board.service.PostService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,10 +45,11 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String displayPostDetail(@PathVariable("id") Long id, Model model) {
+    public String displayPostDetail(@PathVariable("id") Long id, @AuthenticationPrincipal User currentUser, Model model) {
         PostDto postDto = postService.getPost(id);
         List<CommentDto> commentDtoList = commentService.getCommentList(id);
 
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("post", postDto);
         model.addAttribute("commentList", commentDtoList);
         return "board/detail.html";
