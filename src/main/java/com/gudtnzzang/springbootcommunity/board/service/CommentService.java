@@ -57,4 +57,19 @@ public class CommentService {
 
         return commentRepository.save(newComment).getId();
     }
+
+    public void updateComment(CommentDto commentDto) {
+        Comment editedComment = Comment.builder()
+                .id(commentDto.getId())
+                .post(postRepository.getOne(commentDto.getPostId()))
+                .user(userRepository.findByEmail(commentDto.getAuthor()).get())
+                .content(commentDto.getContent())
+                .build();
+        commentRepository.save(editedComment);
+    }
+
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.getOne(commentId);
+        commentRepository.delete(comment);
+    }
 }
