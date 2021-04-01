@@ -27,6 +27,7 @@ public class CommentService {
     private CommentDto convertEntityToDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
+                .postId(comment.getPost().getId())
                 .author(comment.getUser().getEmail())
                 .content(comment.getContent())
                 .createdDate(comment.getCreatedDate())
