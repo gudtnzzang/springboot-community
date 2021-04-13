@@ -5,7 +5,10 @@ import com.gudtnzzang.springbootcommunity.board.domain.repository.CommentReposit
 import com.gudtnzzang.springbootcommunity.board.domain.repository.PostRepository;
 import com.gudtnzzang.springbootcommunity.board.domain.repository.UserRepository;
 import com.gudtnzzang.springbootcommunity.board.dto.CommentDto;
+import javassist.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -59,18 +62,19 @@ public class CommentService {
         return commentRepository.save(newComment).getId();
     }
 
+    @Transactional
     public void updateComment(CommentDto commentDto) {
-        Comment editedComment = Comment.builder()
-                .id(commentDto.getId())
-                .post(postRepository.getOne(commentDto.getPostId()))
-                .user(userRepository.findByEmail(commentDto.getAuthor()).get())
-                .content(commentDto.getContent())
-                .build();
-        commentRepository.save(editedComment);
+
+        Comment comment = commentRepository.findById(commentDto.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id " + commentDto.getId() + " is not found"));
+        comment.setContent(commentDto.getContent()); // dirty check로 업데이트 수행
+
     }
 
+    @Transactional
     public void deleteComment(Long commentId) {
-        Comment comment = commentRepository.getOne(commentId);
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id " + commentId + " is not found"));
         commentRepository.delete(comment);
     }
 }
