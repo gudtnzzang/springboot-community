@@ -66,7 +66,7 @@ public class CommentService {
     public void updateComment(CommentDto commentDto) {
 
         Comment comment = commentRepository.findById(commentDto.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id " + commentDto.getId() + " is not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "id " + commentDto.getId() + " is not found"));
         comment.setContent(commentDto.getContent()); // dirty check로 업데이트 수행
 
     }
@@ -74,7 +74,7 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id " + commentId + " is not found"));
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "id " + commentId + " is not found"));
         commentRepository.delete(comment);
     }
 }

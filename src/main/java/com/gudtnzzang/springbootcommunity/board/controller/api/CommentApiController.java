@@ -27,13 +27,13 @@ public class CommentApiController {
     @PostMapping
     public ResponseEntity<String> saveComment(@RequestBody CommentDto commentDto) {
         commentService.saveComment(commentDto);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity("save successfully", HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<String> updateComment(@RequestBody CommentDto commentDto) {
         commentService.updateComment(commentDto);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity("update successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")
