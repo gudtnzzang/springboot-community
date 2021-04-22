@@ -8,7 +8,9 @@ import com.gudtnzzang.springbootcommunity.board.dto.PostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -49,6 +51,15 @@ public class PostService {
         return postRepository.save(newPost).getId();
     }
 
+    @Transactional
+    public void updatePost(PostDto postDto) {
+        Post post = postRepository.findById(postDto.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "post id " + postDto.getId() + " is not found"));
+
+        //update by dirty check
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+    }
 
     @Transactional
     public List<PostDto> getBoardList(Integer pageNum) {
@@ -139,7 +150,8 @@ public class PostService {
 
     @Transactional
     public PostDto getPost(Long id) {
-        Post post = postRepository.findById(id).get();
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "post id " + id + " is not found"));
 
         PostDto postDto = PostDto.builder()
                 .id(post.getId())
@@ -153,6 +165,8 @@ public class PostService {
 
     @Transactional
     public void deletePost(Long id) {
-        postRepository.deleteById(id);
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "post id " + id + " is not found"));
+        postRepository.delete(post);
     }
 }

@@ -1,5 +1,6 @@
 package com.gudtnzzang.springbootcommunity.board.exception;
 
+import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,6 +17,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException e) {
         return new ResponseEntity<>(new ErrorResponse(e.getMessage(), new Date()), e.getStatus());
+    }
+
+    @ExceptionHandler(PropertyValueException.class)
+    public ResponseEntity<ErrorResponse> handlePropertyValueException(PropertyValueException e) {
+        return new ResponseEntity<>(new ErrorResponse("necessary property is empty", new Date()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

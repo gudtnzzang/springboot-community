@@ -71,8 +71,7 @@ public class CommentService {
 
         Comment comment = commentRepository.findById(commentDto.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "comment id " + commentDto.getId() + " is not found"));
-        comment.setContent(commentDto.getContent()); // dirty check로 업데이트 수행
-
+        comment.setContent(commentDto.getContent()); //update by dirty check
     }
 
     @Transactional
