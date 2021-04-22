@@ -39,8 +39,12 @@ public class CommentService {
     }
 
     @Transactional
-    public List<CommentDto> getCommentList(Long post_id) {
-        List<Comment> commentList = commentRepository.findByPost_Id(post_id);
+    public List<CommentDto> getCommentList(Long postId) {
+
+        List<Comment> commentList = commentRepository.findByPost_Id(postId);
+        if(commentList.isEmpty()) {
+            throw(new ResponseStatusException(HttpStatus.BAD_REQUEST, "post id " + postId + " is not found"));
+        }
         List<CommentDto> commentDtoList = new ArrayList<CommentDto>();
 
         for(Comment comment : commentList) {
@@ -66,7 +70,7 @@ public class CommentService {
     public void updateComment(CommentDto commentDto) {
 
         Comment comment = commentRepository.findById(commentDto.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "id " + commentDto.getId() + " is not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "comment id " + commentDto.getId() + " is not found"));
         comment.setContent(commentDto.getContent()); // dirty check로 업데이트 수행
 
     }
@@ -74,7 +78,7 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "id " + commentId + " is not found"));
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "comment id " + commentId + " is not found"));
         commentRepository.delete(comment);
     }
 }
